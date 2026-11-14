@@ -16,6 +16,15 @@
 #define CMD_AM_TUNE_STATUS   0x42
 #define CMD_AM_RSQ_STATUS    0x43
 
+/* Soft-I2C Pins (BK1080 original pins) */
+#define I2C_SCL_PORT     0x40060000u   /* GPIOA base */
+#define I2C_SDA_PORT     0x40060000u   /* GPIOA base */
+#define I2C_SCL_PIN      10            /* PA10 */
+#define I2C_SDA_PIN      11            /* PA11 */
+
+/* Public low-level if needed */
+void SI4732_I2C_Init(void);
+
 /* Useful properties */
 #define PROP_RX_VOLUME       0x4000
 #define PROP_AM_CHANNEL_FILTER 0x3102
