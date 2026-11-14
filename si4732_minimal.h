@@ -1,0 +1,52 @@
+#ifndef SI4732_MINIMAL_H
+#define SI4732_MINIMAL_H
+
+#include <stdint.h>
+#include <stdbool.h>
+
+/* SI4732 I2C address (SEN = LOW) */
+#define SI4732_ADDR          0x11
+
+/* Commands we actually need */
+#define CMD_POWER_UP         0x01
+#define CMD_POWER_DOWN       0x11
+#define CMD_SET_PROPERTY     0x12
+#define CMD_GET_INT_STATUS   0x14
+#define CMD_AM_TUNE_FREQ     0x40
+#define CMD_AM_TUNE_STATUS   0x42
+#define CMD_AM_RSQ_STATUS    0x43
+
+/* Useful properties */
+#define PROP_RX_VOLUME       0x4000
+#define PROP_AM_CHANNEL_FILTER 0x3102
+#define PROP_SSB_BFO         0x0100   /* only after patch */
+
+/* Modes */
+typedef enum {
+    SI_MODE_AM = 0,
+    SI_MODE_USB,          /* needs SSB patch */
+    SI_MODE_LSB
+} si_mode_t;
+
+/* Public API – only what we need */
+bool     SI4732_Init(void);                    /* Power-Up in AM */
+void     SI4732_PowerDown(void);
+bool     SI4732_SetFrequency(uint16_t kHz);    /* 150 … 30000 */
+void     SI4732_SetVolume(uint8_t vol);        /* 0-63 */
+uint8_t  SI4732_GetRSSI(void);                 /* 0-127 */
+uint8_t  SI4732_GetSNR(void);
+bool     SI4732_SetMode(si_mode_t mode);       /* currently only AM works */
+void     SI4732_SetBFO(int16_t bfo_hz);        /* stub until patch */
+
+/* Band helpers (example) */
+typedef struct {
+    const char *name;
+    uint16_t    lo_kHz;
+    uint16_t    hi_kHz;
+    uint16_t    step_kHz;
+} si_band_t;
+
+extern const si_band_t si_bands[];
+extern const uint8_t   si_band_count;
+
+#endif
